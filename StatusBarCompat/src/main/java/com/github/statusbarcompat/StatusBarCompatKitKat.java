@@ -142,7 +142,6 @@ class StatusBarCompatKitKat {
     static void translucentStatusBar(Activity activity) {
         Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
         ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
         View mContentChild = mContentView.getChildAt(0);
 
@@ -150,13 +149,19 @@ class StatusBarCompatKitKat {
         removeMarginTopOfContentChild(mContentChild, getStatusBarHeight(activity));
         if (mContentChild != null) {
             ViewCompat.setFitsSystemWindows(mContentChild, false);
+            ViewCompat.requestApplyInsets(mContentView);
         }
     }
     static void clearTranslucent(Activity activity) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         removeFakeStatusBarViewIfExist(activity);
-
+        ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+        View mContentChild = mContentView.getChildAt(0);
+        if (mContentChild != null) {
+            ViewCompat.setFitsSystemWindows(mContentChild, true);
+            ViewCompat.requestApplyInsets(mContentView);
+        }
     }
 
     /**

@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
     tools:context="com.github.statusbarcompat.demo.TranslucentStatusBarActivity">
 
-    <include layout="@layout/include_comment_layout" />
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:text="设置"
+        android:onClick="setStatusBar"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:text="还原"
+        android:onClick="clearStatusBar"
+        android:layout_height="wrap_content" />
 </LinearLayout>
