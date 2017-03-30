@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     tools:context="com.github.statusbarcompat.demo.CollapsingToolbarrActivity">
    <android.support.design.widget.AppBarLayout
        android:layout_width="match_parent"
        android:id="@+id/appbar"
+       android:fitsSystemWindows="true"
        android:layout_height="wrap_content">
        <android.support.design.widget.CollapsingToolbarLayout
            android:layout_width="match_parent"
            android:id="@+id/collaps"
-
+           android:fitsSystemWindows="true"
            app:title="saklgj;s"
            app:contentScrim="@color/colorPrimary"
            app:layout_scrollFlags="scroll|exitUntilCollapsed"
