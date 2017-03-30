@@ -214,12 +214,12 @@ class StatusBarCompatKitKat {
         }
     }
     static void closeStatusBarColorForCollapsingToolbar(final Activity activity, final int statusColor) {
-       clearTranslucent(activity);
-        setStatusBarColor(activity, statusColor);
+        clearTranslucent(activity);
+//        setStatusBarColor(activity, statusColor);
         ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
         View toolbar = mContentView.findViewWithTag(true);
         if (toolbar instanceof Toolbar) {
-//            removeToolbarMarginTop(activity,toolbar);
+            removeToolbarMarginTop(activity,toolbar);
 //            ViewCompat.setFitsSystemWindows(toolbar,false);
 //            ViewCompat.requestApplyInsets(toolbar);
         }
