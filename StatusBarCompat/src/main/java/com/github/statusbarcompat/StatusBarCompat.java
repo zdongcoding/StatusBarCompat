@@ -82,7 +82,7 @@ public class StatusBarCompat {
 
     public static void closeStatusBarColorForCollapsingToolbar(@NonNull Activity activity, @ColorInt int statusColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StatusBarCompatLollipop.setStatusBarColor(activity, statusColor);
+            StatusBarCompatLollipop.clearTranslucent(activity);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             StatusBarCompatKitKat.closeStatusBarColorForCollapsingToolbar(activity, statusColor);
         }

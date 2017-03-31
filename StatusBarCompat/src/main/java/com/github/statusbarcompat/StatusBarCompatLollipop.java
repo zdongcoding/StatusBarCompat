@@ -76,7 +76,6 @@ class StatusBarCompatLollipop {
      */
     static void translucentStatusBar(Activity activity, boolean hideStatusBarBackground) {
         Window window = activity.getWindow();
-        Log.e("StatusBarCompatLollipop", "window.getAttributes().flags:" + window.getAttributes().flags);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         if (hideStatusBarBackground) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -112,24 +111,24 @@ class StatusBarCompatLollipop {
     }
 
     /**
-     * compat for CollapsingToolbarLayout
-     * <p>
-     * 1. change to full-screen mode(like translucentStatusBar).
-     * 2. set View's FitsSystemWindow to false.
-     * 3. adjust toolbar's height to layout.
-     * 4. cancel CollapsingToolbarLayout's WindowInsets, let it layout as normal.
-     * 5. call setStatusBarScrimColor to set Color.
+     *
+     * @param activity
+     * @param appBarLayout   fitSystemWindows =true;   必须在xml中设置CoordinatorLayout&appBarLayout  fitSystemWindows =true;   否则布局整体移动statusbar 高度 除 Toolbar
+     * @param collapsingToolbarLayout    fitSystemWindows =true;
+     * @param toolbar
+     * @param statusColor
      */
     static void setStatusBarColorForCollapsingToolbar(Activity activity, final AppBarLayout appBarLayout, CollapsingToolbarLayout collapsingToolbarLayout,
                                                       Toolbar toolbar, int statusColor) {
-        translucentStatusBar(activity,true);   //必须在xml 设置一下 fitsSystemWindows=true
-//        ViewCompat.setFitsSystemWindows((View) appBarLayout.getParent(),true);
-//
-//        ViewCompat.setFitsSystemWindows(appBarLayout,true);
-//
-//        ViewCompat.setFitsSystemWindows(collapsingToolbarLayout,true);
-//
-//        ViewCompat.setFitsSystemWindows(collapsingToolbarLayout.getChildAt(0),true);
+
+        translucentStatusBar(activity,true);
+//        必须在xml 设置一下 CoordinatorLayout&&appBarLayout fitsSystemWindows=true
+        ViewCompat.setFitsSystemWindows((View) appBarLayout.getParent(),true);
+        ViewCompat.requestApplyInsets((View) appBarLayout.getParent());
+        ViewCompat.setFitsSystemWindows(appBarLayout,true);
+        ViewCompat.requestApplyInsets(appBarLayout);
+        ViewCompat.setFitsSystemWindows(collapsingToolbarLayout.getChildAt(0),true);
+        ViewCompat.requestApplyInsets(collapsingToolbarLayout.getChildAt(0));
         collapsingToolbarLayout.setStatusBarScrimColor(statusColor);
     }
 }

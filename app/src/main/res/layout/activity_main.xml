@@ -30,5 +30,11 @@
         android:id="@+id/text"
         android:layout_width="match_parent"
         android:text="@string/version_string"
+        android:visibility="gone"
         android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/img"
+        android:src="@mipmap/ic_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
