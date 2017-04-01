@@ -118,8 +118,8 @@ class StatusBarCompatLollipop {
      * @param toolbar
      * @param statusColor
      */
-    static void setStatusBarColorForCollapsingToolbar(Activity activity, final AppBarLayout appBarLayout, CollapsingToolbarLayout collapsingToolbarLayout,
-                                                      Toolbar toolbar, int statusColor) {
+    static void TranslucentStatusBarForCollapsingToolbar(Activity activity, final AppBarLayout appBarLayout, CollapsingToolbarLayout collapsingToolbarLayout,
+                                                         Toolbar toolbar, int statusColor) {
 
         translucentStatusBar(activity,true);
 //        必须在xml 设置一下 CoordinatorLayout&&appBarLayout fitsSystemWindows=true

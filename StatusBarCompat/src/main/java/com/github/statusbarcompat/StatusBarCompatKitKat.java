@@ -22,8 +22,8 @@ import static android.R.attr.statusBarColor;
 import static java.lang.Boolean.FALSE;
 
 /**
- * After kitkat add fake status bar
- * Created by qiu on 8/27/16.
+ * @author zoudong
+ *  4.4以上
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 class StatusBarCompatKitKat {
@@ -105,15 +105,7 @@ class StatusBarCompatKitKat {
         }
     }
 
-    /**
-     * set StatusBarColor
-     * <p>
-     * 1. set Window Flag : WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-     * 2. removeFakeStatusBarViewIfExist
-     * 3. addFakeStatusBarView
-     * 4. addMarginTopToContentChild
-     * 5. cancel ContentChild's fitsSystemWindow
-     */
+
     static void setStatusBarColor(Activity activity, int statusColor) {
         Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -131,14 +123,7 @@ class StatusBarCompatKitKat {
         }
     }
 
-    /**
-     * translucentStatusBar
-     * <p>
-     * 1. set Window Flag : WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-     * 2. removeFakeStatusBarViewIfExist
-     * 3. removeMarginTopOfContentChild
-     * 4. cancel ContentChild's fitsSystemWindow
-     */
+
     static void translucentStatusBar(Activity activity) {
         Window window = activity.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -164,17 +149,9 @@ class StatusBarCompatKitKat {
         }
     }
 
-    /**
-     * compat for CollapsingToolbarLayout
-     * <p>
-     * 1. set Window Flag : WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-     * 2. set FitsSystemWindows for views.
-     * 3. removeFakeStatusBarViewIfExist
-     * 4. removeMarginTopOfContentChild
-     * 5. add OnOffsetChangedListener to change statusBarView's alpha
-     */
-    static void setStatusBarColorForCollapsingToolbar(final Activity activity, final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
-                                                      final Toolbar toolbar, final int statusColor) {
+
+    static void TranslucentStatusBarForCollapsingToolbar(final Activity activity, final AppBarLayout appBarLayout, final CollapsingToolbarLayout collapsingToolbarLayout,
+                                                         final Toolbar toolbar, final int statusColor) {
         translucentStatusBar(activity);
         ViewCompat.setFitsSystemWindows((View) appBarLayout.getParent(),false);
         ViewCompat.setFitsSystemWindows(appBarLayout,false);
@@ -198,31 +175,41 @@ class StatusBarCompatKitKat {
         });
     }
     private static void setToolbarMarginTop(Activity activity, View toolbar) {
+        int statusBarHeight = getStatusBarHeight(activity);
         if (toolbar.getTag() == null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            lp.height += getStatusBarHeight(activity);
-            toolbar.setLayoutParams(lp);
+            lp.height+= statusBarHeight;
+            toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getPaddingTop() +statusBarHeight, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.requestLayout();
             toolbar.setTag(true);
         }
     }
     private static void removeToolbarMarginTop(Activity activity, View toolbar) {
+        int statusBarHeight = getStatusBarHeight(activity);
         if (toolbar.getTag() != null) {
             CollapsingToolbarLayout.LayoutParams lp = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-            lp.height -= getStatusBarHeight(activity);
-            toolbar.setLayoutParams(lp);
+            lp.height-=statusBarHeight;
+            toolbar.setPadding(toolbar.getPaddingLeft(), toolbar.getPaddingTop() -statusBarHeight, toolbar.getPaddingRight(), toolbar.getPaddingBottom());
+            toolbar.requestLayout();
+            toolbar.getParent().requestLayout();
             toolbar.setTag(null);
         }
     }
-    static void closeStatusBarColorForCollapsingToolbar(final Activity activity, final int statusColor) {
-        clearTranslucent(activity);
-//        setStatusBarColor(activity, statusColor);
+    static void restoreStatusBarForCollapsingToolbar(final Activity activity, final int statusColor) {
+        Window window = activity.getWindow();
+        ViewGroup mDecorView = (ViewGroup) window.getDecorView();
+        View fakeView = mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);
+        if (fakeView != null) {
+            fakeView.setAlpha(1);
+            fakeView.setBackgroundColor(statusColor);
+        }
         ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        removeFakeStatusBarViewIfExist(activity);
         View toolbar = mContentView.findViewWithTag(true);
         if (toolbar instanceof Toolbar) {
+            ViewCompat.setFitsSystemWindows(toolbar,false);
             removeToolbarMarginTop(activity,toolbar);
-//            ViewCompat.setFitsSystemWindows(toolbar,false);
-//            ViewCompat.requestApplyInsets(toolbar);
         }
-
     }
 }

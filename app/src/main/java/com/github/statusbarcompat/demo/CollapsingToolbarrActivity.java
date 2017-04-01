@@ -6,16 +6,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.github.statusbarcompat.StatusBarCompat;
 
 
@@ -48,11 +43,11 @@ public class CollapsingToolbarrActivity extends AppCompatActivity {
 
     public void setStatusBar(View view) {
 //        StatusBarCompat.translucentStatusBar(this);
-        StatusBarCompat.setStatusBarColorForCollapsingToolbar(this, appBarLayout, collapsingToolbarLayout, toolbar,Color.RED);
+        StatusBarCompat.TranslucentStatusBarForCollapsingToolbar(this, appBarLayout, collapsingToolbarLayout, toolbar,Color.RED);
     }
 
     public void clearStatusBar(View view) {
-        StatusBarCompat.closeStatusBarColorForCollapsingToolbar(this, Color.BLACK);
+        StatusBarCompat.restoreStatusBarForCollapsingToolbar(this, Color.BLACK);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
