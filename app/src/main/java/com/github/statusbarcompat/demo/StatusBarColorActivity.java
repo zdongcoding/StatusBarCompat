@@ -22,6 +22,7 @@ public class StatusBarColorActivity extends AppCompatActivity {
     public void setStatusBar(View view) {
         Random random = new Random();
         StatusBarCompat.setStatusBarColor(this, Color.RED,random.nextInt(255));
+        StatusBarCompat.setStatusBarLightMode(this,true);
     }
 
     public void clearStatusBar(View view) {

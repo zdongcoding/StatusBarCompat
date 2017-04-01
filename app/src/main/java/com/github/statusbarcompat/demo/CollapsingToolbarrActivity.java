@@ -42,8 +42,8 @@ public class CollapsingToolbarrActivity extends AppCompatActivity {
     }
 
     public void setStatusBar(View view) {
-//        StatusBarCompat.translucentStatusBar(this);
         StatusBarCompat.TranslucentStatusBarForCollapsingToolbar(this, appBarLayout, collapsingToolbarLayout, toolbar,Color.RED);
+        StatusBarCompat.setStatusBarLightMode(this,true);
     }
 
     public void clearStatusBar(View view) {
