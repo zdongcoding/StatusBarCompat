@@ -47,7 +47,7 @@ public class CollapsingToolbarrActivity extends AppCompatActivity {
     }
 
     public void clearStatusBar(View view) {
-        StatusBarCompat.restoreStatusBarForCollapsingToolbar(this, Color.BLACK);
+        StatusBarCompat.clearStatusBarForCollapsingToolbar(this, Color.BLACK);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

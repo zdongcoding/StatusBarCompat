@@ -195,7 +195,7 @@ class StatusBarCompatKitKat {
             toolbar.setTag(null);
         }
     }
-    static void restoreStatusBarForCollapsingToolbar(final Activity activity, final int statusColor) {
+    static void clearStatusBarForCollapsingToolbar(final Activity activity, final int statusColor) {
         Window window = activity.getWindow();
         ViewGroup mDecorView = (ViewGroup) window.getDecorView();
         View fakeView = mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);

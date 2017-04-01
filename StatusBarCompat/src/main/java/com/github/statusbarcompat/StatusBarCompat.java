@@ -79,11 +79,11 @@ public class StatusBarCompat {
         }
     }
 
-    public static void restoreStatusBarForCollapsingToolbar(@NonNull Activity activity, @ColorInt int statusColor) {
+    public static void clearStatusBarForCollapsingToolbar(@NonNull Activity activity, @ColorInt int statusColor) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             StatusBarCompatLollipop.clearTranslucent(activity);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            StatusBarCompatKitKat.restoreStatusBarForCollapsingToolbar(activity, statusColor);
+            StatusBarCompatKitKat.clearStatusBarForCollapsingToolbar(activity, statusColor);
         }
     }
 }
