@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -12,6 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+
+import java.lang.reflect.Field;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .into(imageView);
+
+        Field[] darkFlag = WindowManager.LayoutParams.class.getDeclaredFields();
+        for (Field field : darkFlag) {
+            Log.e("zoudong", "field=: "+field.toString());
+        }
     }
 
     public void setStatusBarColor(View view) {

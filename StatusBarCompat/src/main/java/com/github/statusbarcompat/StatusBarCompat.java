@@ -100,7 +100,7 @@ public class StatusBarCompat {
     public static void setStatusBarLightMode(Activity activity,boolean islight) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //判断是否为小米或魅族手机，如果是则将状态栏文字改为黑色
-            if (MIUISetStatusBarLightMode(activity, islight) || FlymeSetStatusBarLightMode(activity, islight)) {
+            if (MIUISetStatusBarLightMode(activity, islight) || FlymeSetStatusBarLightMode(activity, islight)||ZUKSetStatusBarLightMode(activity, islight)) {
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 //如果是6.0以上将状态栏文字改为黑色，并设置状态栏颜色
                 int uiVisibility = activity.getWindow().getDecorView().getSystemUiVisibility();
@@ -170,4 +170,35 @@ public class StatusBarCompat {
         return result;
     }
 
+    /**
+     * zuk 手机
+     * @param activity
+     * @param darkmode
+     * @return
+     */
+    static boolean ZUKSetStatusBarLightMode(Activity activity, boolean darkmode) {
+        boolean result = false;
+        try {
+            WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
+            Field darkFlag = WindowManager.LayoutParams.class
+                    .getDeclaredField("PRIVATE_FLAG_DARK_STATUS_ICON");
+            Field privateFlags = WindowManager.LayoutParams.class
+                    .getDeclaredField("privateFlags");
+            darkFlag.setAccessible(true);
+            privateFlags.setAccessible(true);
+            int bit = darkFlag.getInt(null);
+            int value = privateFlags.getInt(lp);
+            if (darkmode) {
+                value |= bit;
+            } else {
+                value &= ~bit;
+            }
+            privateFlags.setInt(lp, value);
+            activity.getWindow().setAttributes(lp);
+            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
