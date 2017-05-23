@@ -69,6 +69,20 @@ public class StatusBarCompat {
             StatusBarCompatKitKat.translucentStatusBar(activity);
         }
     }
+
+    /**
+     * 当调用 translucentStatusBar 后
+     * @param activity
+     * @param hideStatusBarBackground
+     * @param color
+     */
+    public static void clearTranslucent(@NonNull Activity activity,boolean hideStatusBarBackground,int color){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            StatusBarCompatLollipop.translucentStatusBar(activity,hideStatusBarBackground,color);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            StatusBarCompatKitKat.clearTranslucent(activity,color);
+        }
+    }
    public static void clearTranslucent(@NonNull Activity activity){
        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
            StatusBarCompatLollipop.clearTranslucent(activity);

@@ -3,6 +3,7 @@ package com.github.statusbarcompat;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -24,12 +25,15 @@ class StatusBarCompatKitKat {
 
     private static final String TAG_FAKE_STATUS_BAR_VIEW = "statusBarView";
     private static final String TAG_MARGIN_ADDED = "marginAdded";
+    private static int result;
 
     /**
      * return statusBar's Height in pixels
      */
     private static int getStatusBarHeight(Context context) {
-        int result = 0;
+        if (result>0) {
+            return result;
+        }
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resId > 0) {
             result = context.getResources().getDimensionPixelOffset(resId);
@@ -61,14 +65,25 @@ class StatusBarCompatKitKat {
      */
     private static void removeFakeStatusBarViewIfExist(Activity activity) {
         Window window = activity.getWindow();
-        ViewGroup mDecorView = (ViewGroup) window.getDecorView();
+       final ViewGroup mDecorView = (ViewGroup) window.getDecorView();
 
-        View fakeView = mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);
+        final View fakeView = mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);
         if (fakeView != null) {
-            mDecorView.removeView(fakeView);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mDecorView.removeView(fakeView);
+                }
+            });
+
         }
     }
+    private static View statusBarViewIfExist(Activity activity) {
+        Window window = activity.getWindow();
+        ViewGroup mDecorView = (ViewGroup) window.getDecorView();
 
+        return mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);
+    }
     /**
      * add marginTop to simulate set FitsSystemWindow true
      */
@@ -107,7 +122,6 @@ class StatusBarCompatKitKat {
         ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
         View mContentChild = mContentView.getChildAt(0);
         int statusBarHeight = getStatusBarHeight(activity);
-
         removeFakeStatusBarViewIfExist(activity);
         addFakeStatusBarView(activity, statusColor, statusBarHeight);
         addMarginTopToContentChild(mContentChild, statusBarHeight);
@@ -118,18 +132,45 @@ class StatusBarCompatKitKat {
     }
 
 
-    static void translucentStatusBar(Activity activity) {
-        Window window = activity.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
-        View mContentChild = mContentView.getChildAt(0);
+    static    void translucentStatusBar(Activity activity) {
+        try {
+            Window window = activity.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            ViewGroup mContentView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
+            View mContentChild = mContentView.getChildAt(0);
+            View view=statusBarViewIfExist(activity);
+            if (view!=null) {
+                view.setBackgroundColor(Color.TRANSPARENT);
+//                removeFakeStatusBarViewIfExist(activity);  // DecorView removeView -->java.lang.NullPointerException dispatchGetDisplayList  bug
+            }
+            removeMarginTopOfContentChild(mContentChild, getStatusBarHeight(activity));
 
-        removeFakeStatusBarViewIfExist(activity);
-        removeMarginTopOfContentChild(mContentChild, getStatusBarHeight(activity));
-        if (mContentChild != null) {
-            ViewCompat.setFitsSystemWindows(mContentChild, false);
-            ViewCompat.requestApplyInsets(mContentView);
+            if (mContentChild != null) {
+                ViewCompat.setFitsSystemWindows(mContentChild, false);
+                ViewCompat.requestApplyInsets(mContentView);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
+
+    }
+    static void clearTranslucent(Activity activity,int color) {
+        Window window = activity.getWindow();
+        ViewGroup mDecorView = (ViewGroup) window.getDecorView();
+
+        View mStatusBarView = mDecorView.findViewWithTag(TAG_FAKE_STATUS_BAR_VIEW);
+        if (mStatusBarView == null) {
+            mStatusBarView = new View(activity);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
+            layoutParams.gravity = Gravity.TOP;
+            mStatusBarView.setLayoutParams(layoutParams);
+            mStatusBarView.setTag(TAG_FAKE_STATUS_BAR_VIEW);
+            mDecorView.addView(mStatusBarView);
+        }
+        mStatusBarView.setBackgroundColor(color);
+
+
+
     }
     static void clearTranslucent(Activity activity) {
         Window window = activity.getWindow();
