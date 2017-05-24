@@ -1,6 +1,7 @@
 package com.github.statusbarcompat.demo;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -25,5 +26,9 @@ public class TranslucentStatusBarActivity extends AppCompatActivity {
 
     public void clearStatusBar(View view) {
         StatusBarCompat.clearTranslucent(this);
+    }
+
+    public void clearStatusBar2(View view) {
+        StatusBarCompat.clearTranslucent(this,true, ContextCompat.getColor(this,R.color.colorAccent));
     }
 }
